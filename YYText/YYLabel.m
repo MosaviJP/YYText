@@ -505,7 +505,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
         YYTextLayout *layout = self._innerLayout;
         BOOL contains = NO;
         if (layout.container.maximumNumberOfRows == 0) {
-            if (layout.truncatedLine == nil) {
+            if (!layout.needTruncation) {
                 contains = YES;
             }
         } else {

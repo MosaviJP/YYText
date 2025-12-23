@@ -328,6 +328,7 @@ dispatch_semaphore_signal(_lock);
 @property (nonatomic, readwrite) CGSize textBoundingSize;
 
 @property (nonatomic, readwrite) BOOL containsHighlight;
+@property (nonatomic, readwrite) BOOL needTruncation;
 @property (nonatomic, readwrite) BOOL needDrawBlockBorder;
 @property (nonatomic, readwrite) BOOL needDrawBackgroundBorder;
 @property (nonatomic, readwrite) BOOL needDrawShadow;
@@ -674,6 +675,7 @@ dispatch_semaphore_signal(_lock);
     
     visibleRange = YYTextNSRangeFromCFRange(CTFrameGetVisibleStringRange(ctFrame));
     if (needTruncation) {
+        layout.needTruncation = YES;
         YYTextLine *lastLine = lines.lastObject;
         NSRange lastRange = lastLine.range;
         visibleRange.length = lastRange.location + lastRange.length - visibleRange.location;

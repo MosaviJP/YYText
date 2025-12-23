@@ -251,6 +251,8 @@ extern const CGSize YYTextContainerMaxSize;
 @property (nonatomic, readonly) CGSize textBoundingSize;
 ///< Has highlight attribute
 @property (nonatomic, readonly) BOOL containsHighlight;
+/// True if the current text does not fit in the constrained frame.
+@property (nonatomic, readonly) BOOL needTruncation;
 ///< Has block border attribute
 @property (nonatomic, readonly) BOOL needDrawBlockBorder;
 ///< Has background border attribute

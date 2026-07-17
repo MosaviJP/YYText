@@ -1462,7 +1462,6 @@ typedef NS_ENUM(NSUInteger, YYTextMoveDirection) {
                     _selectedTextRange = [YYTextRange rangeWithRange:newRange];
                 }
             }
-            _selectedTextRange = [self _correctedTextRange:_selectedTextRange];
             if (notify) [_inputDelegate selectionDidChange:self];
         }
     }
@@ -1470,6 +1469,9 @@ typedef NS_ENUM(NSUInteger, YYTextMoveDirection) {
     NSRange newRange = NSMakeRange(range.asRange.location, text.length);
     [_innerText replaceCharactersInRange:range.asRange withString:text];
     [_innerText yy_removeDiscontinuousAttributesInRange:newRange];
+    // Correct the selection against the updated text storage. Doing this before
+    // replacement clamps dictation's new caret position to the old text length.
+    _selectedTextRange = [self _correctedTextRange:_selectedTextRange];
     if (notify) [_inputDelegate textDidChange:self];
 }
 
@@ -3273,6 +3275,28 @@ typedef NS_ENUM(NSUInteger, YYTextMoveDirection) {
 }
 
 #pragma mark - @protocol UITextInput
+
+- (void)insertDictationResult:(NSArray<UIDictationPhrase *> *)dictationResult {
+    NSMutableString *text = [NSMutableString string];
+    for (UIDictationPhrase *phrase in dictationResult) {
+        [text appendString:phrase.text];
+    }
+    [self insertText:text];
+}
+
+- (void)dictationRecordingDidEnd {
+}
+
+- (id)insertDictationResultPlaceholder {
+    return nil;
+}
+
+- (CGRect)frameForDictationResultPlaceholder:(id)placeholder {
+    return CGRectZero;
+}
+
+- (void)removeDictationResultPlaceholder:(id)placeholder willInsertResult:(BOOL)willInsertResult {
+}
 
 - (void)setInputDelegate:(id<UITextInputDelegate>)inputDelegate {
     _inputDelegate = inputDelegate;
